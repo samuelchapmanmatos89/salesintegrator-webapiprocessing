@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="49d557d6-e731-48c9-a0b2-0a24a9d08335" >
+		<http:listener-connection host="${http.host}" port="${http.port}" readTimeout="${http.timeout}"/>
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="affef2ac-7ebb-468c-acf6-20873b8ff760" file="config.yaml" />
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="b57cab8c-c092-4502-afd8-f9a924a0efc6">
+		<http:request-connection host="${http.apiAccount}" connectionIdleTimeout="${http.timeout}" protocol="HTTPS"/>
+	</http:request-config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="544153e4-3cf5-4ba6-b298-c5fbf24c7c99" >
+		<salesforce:basic-connection username="${sfdc4.username}" password="${sfdc4.password}" securityToken="${sfdc4.token}"/>
+	</salesforce:sfdc-config>
+	<http:request-config name="HTTP_Request_configurationProduct" doc:name="HTTP Request configuration" doc:id="aacdf798-c0f3-4de5-992c-8f7ccae123ed" >
+		<http:request-connection host="${http.apiProduct}" connectionIdleTimeout="${http.timeout}"/>
+	</http:request-config>
+</mule>
