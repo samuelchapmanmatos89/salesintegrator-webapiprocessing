@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_95cfb8b6_f193_478c_94f9_aaa10d2f9db6_Input_Variables_accountList = Any
+

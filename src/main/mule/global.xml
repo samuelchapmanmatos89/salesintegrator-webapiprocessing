@@ -16,6 +16,9 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 		<salesforce:basic-connection username="${sfdc4.username}" password="${sfdc4.password}" securityToken="${sfdc4.token}"/>
 	</salesforce:sfdc-config>
 	<http:request-config name="HTTP_Request_configurationProduct" doc:name="HTTP Request configuration" doc:id="aacdf798-c0f3-4de5-992c-8f7ccae123ed" >
-		<http:request-connection host="${http.apiProduct}" connectionIdleTimeout="${http.timeout}"/>
+		<http:request-connection host="${http.apiProduct}" connectionIdleTimeout="${http.timeout}" protocol="HTTPS"/>
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configurationPricebook2" doc:name="HTTP Request configuration" doc:id="70b7235c-85c8-4632-8639-9d2800e3af2b" >
+		<http:request-connection host="${http.apiPricebook2}" connectionIdleTimeout="${http.timeout}" />
 	</http:request-config>
 </mule>
