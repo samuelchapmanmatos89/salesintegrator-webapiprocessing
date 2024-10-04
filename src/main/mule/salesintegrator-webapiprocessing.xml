@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/ba
 		<http:listener doc:name="SalesIntegradorerviceProccessComplete" doc:id="500ebad3-5201-40f9-a23c-cd1dfab3a64c" config-ref="HTTP_Listener_config" path="/SalesIntegradorervice" allowedMethods="POST"/>
 		<flow-ref doc:name="selectObjectList" doc:id="0564a064-8a46-4d20-90d2-f63fec53db72" name="selectObjectList"/>
 		<logger level="INFO" doc:name="Logger" doc:id="b6028efa-c523-4c47-bd96-c38c146b7c0d" />
-		<flow-ref doc:name="accountProccess" doc:id="673c7c39-ad94-42c2-8781-1608ee82b315" name="accountProccess"/>
+		<flow-ref doc:name="accountProccess" doc:id="673c7c39-ad94-42c2-8781-1608ee82b315" name="AccountProcessValidatingExistingOrCreation"/>
 		<logger level="INFO" doc:name="Logger" doc:id="d72809ad-7fd6-4db1-aeae-03948ec8702e" />
 		<set-variable value="#[payload]" doc:name="accountResponse" doc:id="991a1a1a-05df-4456-9484-cda7f8e507b0" variableName="accountResponse"/>
 		<logger level="INFO" doc:name="Logger" doc:id="e82d9854-a03f-44db-afd5-de583fc82d0c" />
@@ -968,8 +968,7 @@ payload]]></ee:set-payload>
 		</choice>
 		<logger level="INFO" doc:name="Logger2" doc:id="8c176e09-226d-4d6b-86bd-633d7ccbf3d2" />
 	</flow>
-	<flow name="accountProccess" doc:id="573aa315-15ad-45ff-9a1f-f8e522f35ef6" >
-		<logger level="INFO" doc:name="Logger" doc:id="627be484-8228-4557-bd81-73f8fa50aa44" />
+	<flow name="AccountProcessValidatingExistingOrCreation" doc:id="573aa315-15ad-45ff-9a1f-f8e522f35ef6" >
 		<ee:transform doc:name="Transform To List&lt;Account&gt;" doc:id="360c9eff-b2f3-4bd7-b19d-e32482d18fbb" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -993,7 +992,7 @@ accounts map (account) ->
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<ee:transform doc:name="Transform Message1" doc:id="46620eb4-7600-43e9-ba0c-045da7f3cf7c" >
+		<ee:transform doc:name="List Ids" doc:id="46620eb4-7600-43e9-ba0c-045da7f3cf7c" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -1001,9 +1000,14 @@ output application/json
 payload filter ((item) -> item.external_Id__c != null and item.external_Id__c != "")
 ]]></ee:set-payload>
 			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="accountObject" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
 		</ee:transform>
-		<set-variable value="#[payload]" doc:name="accountObject" doc:id="e0ddfb55-5503-4066-9528-0010a50107f7" variableName="accountObject" />
-		<ee:transform doc:name="Transform Message" doc:id="bf63b924-9a2f-4f41-84c5-2d4f746ab7af">
+		<ee:transform doc:name="Concatenate Ids." doc:id="bf63b924-9a2f-4f41-84c5-2d4f746ab7af">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output text/plain
@@ -1012,7 +1016,7 @@ output text/plain
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<ee:transform doc:name="Transform Message4" doc:id="82a2a916-fc9b-49a9-93e8-2befcc22b0f0" >
+		<ee:transform doc:name="Create a query to validate existing records by external_Id__c." doc:id="82a2a916-fc9b-49a9-93e8-2befcc22b0f0" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output text/plain
@@ -1032,12 +1036,16 @@ else
 query
 ]]></ee:set-payload>
 			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="queryvalidateaccount" ><![CDATA[%dw 2.0
+output text/plain
+---
+payload]]></ee:set-variable>
+			</ee:variables>
 		</ee:transform>
-		<set-variable value="#[payload]" doc:name="queryvalidateaccount" doc:id="db6105fe-af64-40de-91ba-73ec27844e5c" variableName="queryvalidateaccount" />
-		<http:request method="POST" doc:name="account-customerwebapihttpsystem POST/getvalidateexistenceaccount" doc:id="16019336-33dd-4353-b329-6af5bd833902" config-ref="HTTP_Request_configuration" path="/getvalidateexistenceaccount" />
-		<logger level="INFO" doc:name="Logger" doc:id="7548d091-5972-4558-acd7-41e06a14702e" />
+		<http:request method="POST" doc:name="WS account-customerwebapihttpsystem POST/getvalidateexistenceaccount" doc:id="16019336-33dd-4353-b329-6af5bd833902" config-ref="HTTP_Request_configuration" path="/getvalidateexistenceaccount" />
 		<set-variable value="#[payload]" doc:name="validationAccount" doc:id="d537e7bf-e78c-4d86-9909-68ee64333bdb" variableName="validationAccount"/>
-		<ee:transform doc:name="Transform Message5" doc:id="b9bd4fb1-de73-4b56-90d8-80345aaba85d" >
+		<ee:transform doc:name="Filter records that do not exist for creation." doc:id="b9bd4fb1-de73-4b56-90d8-80345aaba85d" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -1055,7 +1063,6 @@ vars.accountObject filter (item) -> notInPayload(item)
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger1" doc:id="d9ab2bf3-0254-4378-87eb-e3fe4fc49473" />
 		<choice doc:name="Proccess Product" doc:id="43f0745b-c990-4303-9742-55016a018e60" >
 			<when expression="#[!isEmpty(payload)]" >
 				<ee:transform doc:name="Transform Message" doc:id="25bff4f8-c66e-488f-93b1-3b46911b8d3a" >
@@ -1067,28 +1074,21 @@ payload
 ]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
-				<ee:transform doc:name="Transform Message1" doc:id="c112f53c-4989-40e2-a1d1-9aaa59a30b1d" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-					</ee:message>
-				</ee:transform>
-				<logger level="INFO" doc:name="Logger" doc:id="1c79478f-2049-4f77-a1eb-4911d29233e4" />
 				<http:request method="POST" doc:name="account-customerwebapihttpsystem POST/accountcreated" doc:id="729317d0-2ebd-46f6-a465-621e8a7928dd" config-ref="HTTP_Request_configuration" path="/accountcreated" />
-				<ee:transform doc:name="Transform Message3" doc:id="cdb8e823-7ee9-4300-908a-0ab123afb3b2" >
+				<ee:transform doc:name="Response to Creation for Lis&lt;Account&gt; To Json" doc:id="cdb8e823-7ee9-4300-908a-0ab123afb3b2" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
 payload]]></ee:set-payload>
 					</ee:message>
+					<ee:variables >
+					</ee:variables>
 				</ee:transform>
-				<logger level="INFO" doc:name="Logger" doc:id="84e289e2-179d-4094-ad2d-6dc3631e999d" />
+				<logger level="INFO" doc:name="ResponseProccess" doc:id="84e289e2-179d-4094-ad2d-6dc3631e999d" />
 			</when>
 			<otherwise >
-				<ee:transform doc:name="Transform Message" doc:id="694c0889-e3b7-497d-b874-93770c8221d9" >
+				<ee:transform doc:name="List&lt;Account&gt; validating existing to JSON" doc:id="694c0889-e3b7-497d-b874-93770c8221d9" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -1098,10 +1098,10 @@ vars.validationAccount]]></ee:set-payload>
 					<ee:variables >
 					</ee:variables>
 				</ee:transform>
-				<logger level="INFO" doc:name="Logger" doc:id="6720af49-9e0e-44f9-a97a-3407beb21f92" />
+				<logger level="INFO" doc:name="ResponseProccess" doc:id="6720af49-9e0e-44f9-a97a-3407beb21f92" />
 			</otherwise>
 		</choice>
 		<set-variable value="#[payload]" doc:name="accountResponse" doc:id="636bcf72-cb0e-47df-8cb3-477230746d43" variableName="accountResponse"/>
-		<logger level="INFO" doc:name="Logger2" doc:id="99c22833-2b76-4e15-9f66-9e421b3cd9ee" />
+		<logger level="INFO" doc:name="AccountResponse" doc:id="99c22833-2b76-4e15-9f66-9e421b3cd9ee" />
 	</flow>
 </mule>
