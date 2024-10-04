@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
-	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
-	xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+<mule xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
 http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd">
 	
-	<flow name="salesintegrator-webapiexperienceFlow" doc:id="a9089982-b3e0-4090-8744-e06aabaf5461" >
+	<flow name="salesintegrator-webapiexperienceFlow" doc:id="a9089982-b3e0-4090-8744-e06aabaf5461" initialState="started">
 		<http:listener doc:name="SalesIntegradorerviceProccessComplete" doc:id="500ebad3-5201-40f9-a23c-cd1dfab3a64c" config-ref="HTTP_Listener_config" path="/SalesIntegradorervice" allowedMethods="POST"/>
 		<flow-ref doc:name="selectObjectList" doc:id="0564a064-8a46-4d20-90d2-f63fec53db72" name="selectObjectList"/>
 		<logger level="INFO" doc:name="Logger" doc:id="b6028efa-c523-4c47-bd96-c38c146b7c0d" />
@@ -19,29 +20,52 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 		<logger level="INFO" doc:name="Logger" doc:id="d72809ad-7fd6-4db1-aeae-03948ec8702e" />
 		<set-variable value="#[payload]" doc:name="accountResponse" doc:id="991a1a1a-05df-4456-9484-cda7f8e507b0" variableName="accountResponse"/>
 		<logger level="INFO" doc:name="Logger" doc:id="e82d9854-a03f-44db-afd5-de583fc82d0c" />
-		<flow-ref doc:name="products2Proccess" doc:id="066585ff-8ee0-4cbd-b432-4b4ccdf40ea3" name="products2Proccess" />
+		<!-- [STUDIO:"products2Proccess"]<flow-ref doc:name="products2Proccess" doc:id="066585ff-8ee0-4cbd-b432-4b4ccdf40ea3" name="products2Proccess" /> [STUDIO] -->
 		<logger level="INFO" doc:name="Logger" doc:id="7fa6495e-00ee-42af-b09b-9f1653b2d3fa" />
 		<set-variable value="#[payload]" doc:name="productResponse" doc:id="61a92d93-109b-4579-bb34-c3b2fa1adaa4" variableName="productResponse"/>
 		<logger level="INFO" doc:name="Logger" doc:id="9af741b3-923c-495a-b9e3-9d5c07f260ab" />
-		<flow-ref doc:name="pricebook2Proccess" doc:id="27a5e4a8-1c81-471d-876c-cd799056bf2c" name="Pricebook2Proccess"/>
+		<!-- [STUDIO:"pricebook2Proccess"]<flow-ref doc:name="pricebook2Proccess" doc:id="27a5e4a8-1c81-471d-876c-cd799056bf2c" name="Pricebook2Proccess"/> [STUDIO] -->
 		<logger level="INFO" doc:name="Logger" doc:id="783cd0e7-e3c4-4253-ba35-bb28f22c466b" />
 		<set-variable value="#[payload]" doc:name="pricebook2Response" doc:id="864c9639-4118-479c-866c-f11567b97e4a" variableName="pricebook2Response" />
-		<ee:transform doc:name="Transform Message" doc:id="5010da7d-be21-4842-8b05-f97c45b96084" >
+		<logger level="INFO" doc:name="Logger" doc:id="8a2f7ef8-8622-412b-b484-9a172a4d5149" />
+		<!-- [STUDIO:"pricebookentryProccess"]<flow-ref doc:name="pricebookentryProccess" doc:id="35d31dae-81f2-4c9d-a6ac-7d3910746649" name="PricebookentryProccess"/> [STUDIO] -->
+		<logger level="INFO" doc:name="Logger" doc:id="e4e92e3b-9e60-4188-ba66-87d54c5f9f4e" />
+		<set-variable value="#[payload]" doc:name="pricebookentryResponse" doc:id="6a61e4c5-11db-4e74-89e3-51b0431ae1da" variableName="pricebookentryResponse"/>
+		<logger level="INFO" doc:name="Logger" doc:id="f5900db6-84fb-43bf-b751-9d21b5df9ea2" />
+		<!-- [STUDIO:"contractProccess"]<flow-ref doc:name="contractProccess" doc:id="41b37f7e-9950-4440-8df1-141e478303e2" name="ContractProccess"/> [STUDIO] -->
+		<logger level="INFO" doc:name="Logger" doc:id="10479a63-eb6f-405e-bb70-d686a52dc0f4" />
+		<set-variable value="#[payload]" doc:name="contractProccessResponse" doc:id="e6d93ad6-efff-439a-90e7-2e7666c26484" variableName="contractProccessResponse"/>
+		<logger level="INFO" doc:name="Logger" doc:id="2ab21a07-9d0c-41a5-9a94-6f84c584ed12" />
+		<!-- [STUDIO:"orderProccess"]<flow-ref doc:name="orderProccess" doc:id="ee4d021b-4c9f-4a4b-8d53-aaf88b9961b8" name="OrderProccess"/> [STUDIO] -->
+		<logger level="INFO" doc:name="Logger" doc:id="1ca74df3-da9b-454e-a86e-a797e5ef77e4" />
+		<set-variable value="#[payload]" doc:name="orderResponse" doc:id="bfaae47f-faf8-4319-bb2b-b96d90fb26e2" variableName="orderResponse"/>
+		<logger level="INFO" doc:name="Logger" doc:id="5eab4a50-1bf8-4a37-a88b-2ab16523eb36" />
+		<ee:transform doc:name="Transform Message" doc:id="5c673142-9cf1-454a-81b7-75b0d1048f9a" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
 {
-	"accountRequest" : vars.accountList,
-	"product2Request" : vars.product2List,
-	"accountResponse" : vars.accountResponse,
-	"productResponse" : vars.productResponse,
-	"pricebook2Request" : vars.pricebook2List,
-	"pricebookResponse" : vars.pricebook2List
+	"Responses": {
+		"accountRespose":vars.accountResponse,
+		"pricebookentryRespose":vars.pricebookentryResponse,
+		"contractRespose":vars.contractProccessResponse,
+		"pricebook2Respose":vars.pricebook2Response,
+		"product2Respose":vars.productResponse,
+		"orderRespose":vars.orderResponse
+	},
+	"Request": {
+		"accountRequest":vars.accountList,
+		"pricebookentryRequest":vars.pricebookentryList,
+		"contractRequest":vars.contractProccessList,
+		"pricebook2Request":vars.pricebook2List,
+		"product2Request":vars.productList,
+		"orderRequest":vars.orderList
+	}
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="10479a63-eb6f-405e-bb70-d686a52dc0f4" />
+		<logger level="INFO" doc:name="Logger" doc:id="2310764e-906f-4a56-ac04-e8df5a6a0691" />
 	</flow>
 	<flow name="selectObjectList" doc:id="04873107-e648-40fe-8bf1-9edafa33cd9c" >
 		<set-variable value="#[payload]" doc:name="Request" doc:id="d2950931-513f-4e14-a280-e66727d3691e" variableName="Request" />
@@ -54,6 +78,14 @@ output application/json
 	</flow>
 	<flow name="products2Proccess" doc:id="80173085-0711-455c-b114-4ab723f59248" >
 		<logger level="INFO" doc:name="Logger" doc:id="b6945dfa-62da-40bf-8eb2-7e1c269ce066" />
+		<ee:transform doc:name="Transform Message" doc:id="ca488dd3-c06a-417c-8bda-8051b436d190" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 		<ee:transform doc:name="Transform To List&lt;Product2&gt;" doc:id="203cd4c9-062f-4b27-961b-c428706dfcd2" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -202,145 +234,6 @@ payload]]></ee:set-payload>
 			</otherwise>
 		</choice>
 		<logger level="INFO" doc:name="Logger" doc:id="620d4107-1dc8-4c6f-b288-30ddf799321d" />
-	</flow>
-	<flow name="accountProccess" doc:id="d2d3f99a-2681-4aa2-9c8f-13d4059d29d9" >
-		<logger level="INFO" doc:name="Logger" doc:id="af28b2d3-f919-4af1-be3c-c499bed9917f" />
-		<ee:transform doc:name="Transform To List&lt;Account&gt;" doc:id="b9fd2eb5-76c2-4497-ab9c-517504390a45" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
-var accounts = payload.account
----
-//accounts map ((account) -> account.externalId)
-accounts map (account) -> 
-{ 
-  "external_Id__c":account.externalId,
-  "Name": account.Name,
-  "BillingAddress": account.BillingAddress,
-  "BillingCity": account.BillingCity,
-  "BillingCountry": account.BillingCountry,
-  "BillingPostalCode": account.BillingPostalCode,
-  "BillingState": account.BillingState,
-  "BillingStreet": account.BillingStreet
-}
-]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<ee:transform doc:name="Transform Message" doc:id="2fb4aa39-ca5d-4c1f-8a05-34f5d8234004">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload filter ((item) -> item.external_Id__c != null and item.external_Id__c != "")
-]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<ee:transform doc:name="Transform Message" doc:id="4ea466d4-0a30-446b-bdad-b98ae35c873b" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<set-variable value="#[payload]" doc:name="accountObject" doc:id="b6014ff0-4001-4a18-ba0e-cdcd1fea50de" variableName="accountObject"/>
-		<ee:transform doc:name="Transform Message" doc:id="3e54bf0a-6f23-44b9-a488-11ca96d23692" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<ee:transform doc:name="Transform Message" doc:id="c450fbfc-4ea7-493f-8e77-e0acd5e65923">
-				<ee:message>
-					<ee:set-payload><![CDATA[%dw 2.0
-output text/plain
-
-// Filtra los externalId válidos
-var validExternalIds = if(payload[0].external_Id__c != null) payload[0].external_Id__c else ""
-// Construye la consulta SQL
-var query = "SELECT external_Id__c, Id, IsDeleted, MasterRecordId, Name, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, BillingGeocodeAccuracy, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, ShippingLatitude, ShippingLongitude, ShippingGeocodeAccuracy, Phone, Fax, AccountNumber, Website, PhotoUrl, Sic, Industry, AnnualRevenue, NumberOfEmployees, Ownership, TickerSymbol, Description, Rating, Site, OwnerId, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp, LastActivityDate, LastViewedDate, LastReferencedDate, Jigsaw, JigsawCompanyId, CleanStatus, AccountSource, DunsNumber, Tradestyle, NaicsCode, NaicsDesc, YearStarted, SicDesc, DandbCompanyId, CustomerPriority__c, SLA__c, Active__c, NumberofLocations__c, UpsellOpportunity__c, SLASerialNumber__c, SLAExpirationDate__c FROM Account "
-    ++ (if (validExternalIds != null) " WHERE external_Id__c = '" ++ validExternalIds ++ "'" else "")
-    ++ " LIMIT 200"
-
----
-query
-]]></ee:set-payload>
-				</ee:message>
-			</ee:transform> 
-		<set-variable value="#[payload]" doc:name="queryvalidateaccount" doc:id="906de5ac-6e89-422c-b5af-8f077aec4c97" variableName="queryvalidateaccount"/>
-		<http:request method="POST" doc:name="account-customerwebapihttpsystem POST/getvalidateexistenceaccount" doc:id="2858dd46-250e-4090-b1b5-84de1bf0aff8" config-ref="HTTP_Request_configuration" path="/getvalidateexistenceaccount"/>
-		<!-- <salesforce:query doc:name="QueryAccountInSalesForce" doc:id="3dc85fc3-5841-4265-b569-061d0ea2954a" config-ref="Salesforce_Config">
-				 <salesforce:salesforce-query><![CDATA[#[payload]
-]]></salesforce:salesforce-query>  
-			</salesforce:query> --> 
-		<ee:transform doc:name="Transform Message" doc:id="70e9ffc7-a9bf-4009-972c-1f14aaae338f">
-				<ee:message>
-					<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-				</ee:message>
-			</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="7caa4833-4f87-4242-84ab-36f7bad8d181" />
-		<choice doc:name="ProccessAccount" doc:id="229852bd-0aec-46d6-a8d1-0c2be4f73e3c">
-				<when expression="#[isEmpty(payload)]">
-					<ee:transform doc:name="Transform Message" doc:id="5a1dde90-243e-4ff5-b20a-34ea763bdbcd">
-						<ee:message>
-							<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-vars.accountObject
-]]></ee:set-payload>
-						</ee:message>
-					</ee:transform>
-					<ee:transform doc:name="Transform Message" doc:id="bd22201d-20cc-4b87-94d3-0110e4f7b9e6">
-						<ee:message>
-							<ee:set-payload><![CDATA[%dw 2.0
-output application/java
-import * from dw::core::Strings
-
----
-payload]]></ee:set-payload>
-						</ee:message>
-					</ee:transform>
-					<ee:transform doc:name="Transform Message" doc:id="b427ab53-0523-4742-9372-f214930bddbc">
-					<ee:message>
-						<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-					</ee:message>
-				</ee:transform>
-				<set-payload value="#[payload]" doc:name="AccountToJSON" doc:id="7d11b004-f4fc-4650-8bd8-86a6179bcd6f" />
-				<http:request method="POST" doc:name="account-customerwebapihttpsystem POST/accountcreated" doc:id="eed30dfe-bcc4-404a-8ea4-d7798a3ce5af" config-ref="HTTP_Request_configuration" path="/accountcreated"/>
-				<!-- <salesforce:create type="Account" doc:name="Create" doc:id="76d1de59-0c33-4ebc-bf60-9b75a689b531" config-ref="Salesforce_Config" /> -->
-					<ee:transform doc:name="Transform Message" doc:id="7833bc48-d71d-4821-9918-a94835de3054">
-						<ee:message>
-							<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-						</ee:message>
-					</ee:transform>
-					<logger level="INFO" doc:name="Logger" doc:id="ca1bb244-af27-4502-9060-c37ac7c3403b" />
-
-                    
-                </when>
-				<otherwise>
-					<ee:transform doc:name="Transform Message" doc:id="52f7c86c-49a6-48c3-9862-28b8016947e9">
-						<ee:message>
-							<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-						</ee:message>
-					</ee:transform>
-					<logger level="INFO" doc:name="Logger" doc:id="c4752586-8c4d-41ef-a902-53455576d1d1" />
-				</otherwise>
-			</choice>
-		<logger level="INFO" doc:name="Logger" doc:id="c8d41341-27f2-4647-b4d5-1f655707423b" />
 	</flow>
 	<flow name="app1-salesintegrator" doc:id="aa4fdf64-4632-4100-b2e4-e10cef635c0f" initialState="stopped">
 		<http:listener doc:name="SalesIntegradorervice" doc:id="24e94f8c-5443-491c-b88b-0b5528a40240" path="/SalesIntegradorervice" config-ref="HTTP_Listener_config" allowedMethods="GET"/>
@@ -635,5 +528,585 @@ payload]]></ee:set-payload>
 			</otherwise>
 		</choice>
 		<logger level="INFO" doc:name="Logger2" doc:id="92db1ac8-95de-46f2-b9c6-2e557db2cde6" />
+	</flow>
+	<flow name="ContractProccess" doc:id="0a88d062-8c9c-4a06-859f-8ff9638adc41" >
+		<logger level="INFO" doc:name="Logger" doc:id="6dd51b54-669c-405a-bbb1-5ff9bf014566" />
+		<ee:transform doc:name="Transform To List&lt;Contract&gt;" doc:id="2ef800b4-4574-4887-a2a3-f7496b6bf86b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var contracts = payload.contract
+---
+contracts map (contract) -> 
+{ 
+   "external_Id__c" : contract.externalId,
+   "CustomerSignedDate": contract.CustomerSignedDate,
+   "ActivatedById": contract.ActivatedById,
+   "ContractNumber": contract.ContractNumber,
+   "AccountId": contract.AccountId,
+        "Description": contract.Description,
+        "BillingCity": contract.BillingCity,
+        "CustomerSignedId": contract.CustomerSignedId,
+        "BillingLatitude": contract.BillingLatitude,
+        "ContractTerm": contract.ContractTerm,
+        "CompanySignedId": contract.CompanySignedId,
+        "StatusCode": contract.StatusCode,     
+        "OwnerId": contract.OwnerId,
+        "CreatedById": contract.CreatedById,
+        "BillingLongitude": contract.BillingLongitude,
+        "BillingGeocodeAccuracy": contract.BillingGeocodeAccuracy,
+        "BillingPostalCode": contract.BillingPostalCode,
+        "CustomerSignedTitle": contract.CustomerSignedTitle,
+        "ActivatedDate": contract.ActivatedDate,
+        "Status": contract.Status,
+        "IsDeleted": contract.IsDeleted,
+        "SpecialTerms": contract.SpecialTerms,
+        "LastApprovedDate": contract.LastApprovedDate,
+        "EndDate": contract.EndDate,
+        "BillingCountry": contract.BillingCountry,
+        "BillingStreet": contract.BillingStreet,
+        "Pricebook2Id": contract.Pricebook2Id,
+        "CompanySignedDate": contract.CompanySignedDate,
+        "OwnerExpirationNotice": contract.OwnerExpirationNotice,
+        "Id": contract.Id,
+        "LastModifiedById": contract.LastModifiedById,
+        "BillingState": contract.BillingState
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="d723f481-143d-4a32-ae28-672a17f42327" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload filter ((item) -> item.external_Id__c != null and item.external_Id__c != "")
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message1" doc:id="a0e45b0e-eb2f-4670-b9e8-83027e0dd5ba" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="ContractObject" doc:id="4a0a2f4d-3085-4315-97ea-a1b4ee28461e" variableName="ContractObject" />
+		<ee:transform doc:name="Transform Message2" doc:id="edc69859-b226-42d8-8a9a-8f5ad4355540" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message3" doc:id="641be4f5-6708-4e43-b3d3-93a6cef0fc3e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output text/plain
+
+// Filtra los externalId válidos
+var validExternalIds = if(payload[0].external_Id__c != null) payload[0].external_Id__c else ""
+// Construye la consulta SQL
+var query = "SELECT external_Id__c,UseStandardPrice,LastModifiedDate,IsDeleted,ProductCode,IsActive,Name,SystemModstamp,IsArchived,UnitPrice,Product2Id,CreatedById,CreatedDate,Pricebook2Id,Id,LastModifiedById FROM PricebookEntry "
+    ++ (if (validExternalIds != null) " WHERE external_Id__c = '" ++ validExternalIds ++ "'" else "")
+    ++ " LIMIT 200"
+
+---
+query
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="queryvalidatepricebookentry" doc:id="91a2263e-5572-49e1-bc45-b14f472ead1b" variableName="queryvalidatepricebookentry" />
+		<http:request method="POST" doc:name="pricebookentry-webapiprocessing POST/getvalidateexistencepricebookentry" doc:id="d2bea52c-5346-4be1-8fed-20330e2b00f9" config-ref="HTTP_Request_configurationContract" path="/getvalidateexistencepricebookentry" />
+		<ee:transform doc:name="Transform Message4" doc:id="d37a4b09-1eb6-4ff7-ae9e-f74337b2948a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger1" doc:id="fb0efbe2-bf8e-4654-b2f7-b3b5c48fdf91" />
+		<choice doc:name="ProccessPricebook" doc:id="890dc48f-4ac2-40e6-a0aa-3bac9e575199" >
+			<when expression="#[isEmpty(payload)]" >
+				<ee:transform doc:name="Transform Message" doc:id="304d544f-22e5-4324-9aab-49364970e0a2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.ContractObject
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<ee:transform doc:name="Transform Message1" doc:id="b5a201f6-366c-4759-abab-b954a16afc9a" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Strings
+
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<ee:transform doc:name="Transform Message2" doc:id="9933a641-8da2-421f-bbbb-6e2340af279c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<set-payload value="#[payload]" doc:name="PricebookToJSON" doc:id="3c713edf-9382-43ad-949e-efec5d1c7a39" />
+				<http:request method="POST" doc:name="contract-webapiprocessing POST/pricebook2created" doc:id="edb7c7b6-eee2-4e05-b42b-cc2edaf6b86a" config-ref="HTTP_Request_configurationContract" path="/pricebook2created" />
+				<ee:transform doc:name="Transform Message3" doc:id="ddc434eb-dab6-45be-815a-033de8339cec" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="44756850-6c95-4fca-8736-a70a7f74ad4e" />
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="59e088e9-0111-4e50-9f86-02cf09feb420" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="dcaa59d0-44d1-4636-976d-03d3f83327b3" />
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger2" doc:id="0806427d-d85f-4552-9b6b-4063d11d182e" />
+	</flow>
+	<flow name="PricebookentryProccess" doc:id="8b25ebaa-f0c0-466c-a423-a146b38b80ad" >
+		<logger level="INFO" doc:name="Logger" doc:id="54e6ecbc-9598-49e1-b376-eca5e2216da3" />
+		<ee:transform doc:name="Transform To List&lt;Contract&gt;" doc:id="3d6eec20-92b9-43bd-bc71-52d3a439e4e8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var pricebookentrys = payload.pricebookentry
+---
+pricebookentrys map (pricebookentry) -> 
+{ 
+   "external_Id__c" : pricebookentry.externalId,
+   "UseStandardPrice": pricebookentry.UseStandardPrice,
+		"type": pricebookentry.`type`,
+        "IsDeleted": pricebookentry.IsDeleted,
+        "ProductCode": pricebookentry.ProductCode,
+        "IsActive": pricebookentry.IsActive,
+        "Name": pricebookentry.Name,
+        "IsArchived": pricebookentry.IsArchived,
+        "UnitPrice": pricebookentry.UnitPrice,
+        "Product2Id": pricebookentry.Product2Id,
+        "CreatedById": pricebookentry.CreatedById,
+        "Pricebook2Id": pricebookentry.Pricebook2Id,
+        "Id": pricebookentry.Id,
+        "LastModifiedById": pricebookentry.LastModifiedById
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="eaefb519-a211-45c2-8426-13d784b3533a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload filter ((item) -> item.external_Id__c != null and item.external_Id__c != "")
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message1" doc:id="fa5621eb-8194-416b-ab07-392c8647a23e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="PricebookentryObject" doc:id="3b622090-4c80-4764-ac64-8e7b2833c801" variableName="PricebookentryObject" />
+		<ee:transform doc:name="Transform Message2" doc:id="db109cd7-b02c-467e-800d-9006891a3c46" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message3" doc:id="ae631cce-c8e3-4506-a9cc-e5011a0ce916" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output text/plain
+
+// Filtra los externalId válidos
+var validExternalIds = if(payload[0].external_Id__c != null) payload[0].external_Id__c else ""
+// Construye la consulta SQL
+var query = "SELECT Id,IsDeleted,Name,CreatedDate,CreatedById,LastModifiedDate,LastModifiedById,SystemModstamp,LastViewedDate,LastReferencedDate,IsActive,IsArchived,Description,IsStandard FROM Pricebook2 "
+    ++ (if (validExternalIds != null) " WHERE external_Id__c = '" ++ validExternalIds ++ "'" else "")
+    ++ " LIMIT 200"
+
+---
+query
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="queryvalidatecontract" doc:id="389d1647-80b8-4f0d-b904-8d532d2c9258" variableName="queryvalidatecontract" />
+		<http:request method="POST" doc:name="contract-webapiprocessing POST/getvalidateexistencepricebook" doc:id="939f0af3-9bb2-475a-825c-723cc57474c9" config-ref="HTTP_Request_configurationPricebookentry" path="/getvalidateexistencepricebook2" />
+		<ee:transform doc:name="Transform Message4" doc:id="3ef826bc-57bf-42d9-aa0a-9aea6f78a7bd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger1" doc:id="22f24c8a-fcb8-4f45-893e-ca2b5967dd8b" />
+		<choice doc:name="ProccessPricebook" doc:id="acd5178b-0207-441e-b380-5923ae6a3a33" >
+			<when expression="#[isEmpty(payload)]" >
+				<ee:transform doc:name="Transform Message" doc:id="e31870e3-41bc-473b-976f-507d83b71eb1" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.PricebookentryObject
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<ee:transform doc:name="Transform Message1" doc:id="10bfb906-015b-4e6e-b939-2b721c75baf3" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Strings
+
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<ee:transform doc:name="Transform Message2" doc:id="9df442dc-6ab0-4f99-96d8-e0493fa5acf6" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<set-payload value="#[payload]" doc:name="PricebookToJSON" doc:id="36c537de-26ae-4cd4-805a-5eacb9d88f3a" />
+				<http:request method="POST" doc:name="pricebookentry-webapiprocessing POST/postcreatepricebookentry" doc:id="c9bc8a10-6c37-47c3-9fbc-7560cf77d60a" config-ref="HTTP_Request_configurationPricebookentry" path="/postcreatepricebookentry" />
+				<ee:transform doc:name="Transform Message3" doc:id="aed43e7d-19b7-47b2-80d7-2d00e472872b" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="65f4b808-4fc7-431f-a1bb-f9ca328552b1" />
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="567d1720-0924-497d-bf1a-dbe62163f1fb" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="0d6bf607-afe7-4b1a-823c-0c46a7b362df" />
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger2" doc:id="cd24ecdc-f664-4b69-b5cb-fd3f4b621408" />
+	</flow>
+	<flow name="OrderProccess" doc:id="eacd63cc-c064-4c59-8b91-9bc99d080330" >
+		<logger level="INFO" doc:name="Logger" doc:id="b74177bc-13c7-4253-a1b1-c67baa5d67a0" />
+		<ee:transform doc:name="Transform To List&lt;Contract&gt;" doc:id="7fc0acd2-9b69-4cf8-ac35-8d24b57b3f00" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var orders = payload.order
+---
+orders map (order) -> 
+{ 
+   	"external_Id__c" : order.externalId,
+  	"type": order.attributes.`type`,
+    "AccountId": order.AccountId,
+    "BillingCity": order.BillingCity,
+    "BillingCountry": order.BillingCountry,
+    "BillingPostalCode": order.BillingPostalCode,
+    "BillingStreet": order.BillingStreet,
+    "CompanyAuthorizedById": order.CompanyAuthorizedById,
+    "ContractId": order.ContractId,
+    "CustomerAuthorizedById": order.CustomerAuthorizedById,
+    "Description": order.Description,
+    "EffectiveDate": if (order.EffectiveDate != null) order.EffectiveDate as Date else null,  // Valor predeterminado
+    "EndDate": if (order.EndDate != null) order.EndDate as Date else null,
+    "LastModifiedDate": if (order.LastModifiedDate != null) order.LastModifiedDate as Date else null,
+    "LastReferencedDate": if (order.LastReferencedDate != null) order.LastReferencedDate as Date else null,
+    "LastViewedDate": if (order.LastViewedDate != null) order.LastViewedDate as Date else null,
+    "Name": order.Name,
+    "OwnerId": order.OwnerId,
+    "Pricebook2Id": order.Pricebook2Id,
+    "ShippingCity": order.ShippingCity,
+    "ShippingCountry": order.ShippingCountry,
+    "ShippingPostalCode": order.ShippingPostalCode,
+    "ShippingStreet": order.ShippingStreet,
+    "Status": order.Status
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="869ea8d8-8046-4f28-a5e6-7fd52b8a195e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload filter ((item) -> item.external_Id__c != null and item.external_Id__c != "")
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message1" doc:id="77b183bc-efd0-46b6-a364-642cd18402c9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="ContractObject" doc:id="5caf1bad-24cb-4789-9080-afe2242c818b" variableName="ContractObject" />
+		<ee:transform doc:name="Transform Message2" doc:id="6c017b11-0f87-44fe-bb6e-b68a57b5d851" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message3" doc:id="b494a70e-35f3-4f47-861c-05ebf068b92a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output text/plain
+
+// Filtra los externalId válidos
+var validExternalIds = if(payload[0].external_Id__c != null) payload[0].external_Id__c else ""
+// Construye la consulta SQL
+var query = "SELECT Id,IsDeleted,Name,CreatedDate,CreatedById,LastModifiedDate,LastModifiedById,SystemModstamp,LastViewedDate,LastReferencedDate,IsActive,IsArchived,Description,IsStandard FROM Pricebook2 "
+    ++ (if (validExternalIds != null) " WHERE external_Id__c = '" ++ validExternalIds ++ "'" else "")
+    ++ " LIMIT 200"
+
+---
+query
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="queryvalidateaccount" doc:id="8bb34f50-d92b-4212-8dd7-e2c803760d39" variableName="queryvalidateaccount" />
+		<http:request method="POST" doc:name="contract-webapiprocessing POST/getvalidateexistencepricebook" doc:id="5be281e4-9e60-46b0-bf84-8a0f77cdaadc" config-ref="HTTP_Request_configurationContract" path="/getvalidateexistencepricebook2" />
+		<ee:transform doc:name="Transform Message4" doc:id="500262dd-6b99-4d0e-8ada-1ecbf6050e2d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger1" doc:id="d7acc476-3ece-4fa7-8016-4603e723c6f8" />
+		<choice doc:name="ProccessPricebook" doc:id="6f4ed4c4-0bf9-4b46-bcb8-d326245c7d02" >
+			<when expression="#[isEmpty(payload)]" >
+				<ee:transform doc:name="Transform Message" doc:id="4c404183-2233-4cb0-8b26-478af920168f" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.Pricebook2Object
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<ee:transform doc:name="Transform Message1" doc:id="3e971c81-efd7-478d-9c38-097c975ec563" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Strings
+
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<ee:transform doc:name="Transform Message2" doc:id="3fb9568f-7380-4071-9183-77c41fa7aa12" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<set-payload value="#[payload]" doc:name="PricebookToJSON" doc:id="37e30d12-287f-4f60-afa6-98eab3acb8b2" />
+				<http:request method="POST" doc:name="contract-webapiprocessing POST/pricebook2created" doc:id="a0ac09f5-27c3-498e-a393-756ec832225d" config-ref="HTTP_Request_configurationContract" path="/pricebook2created" />
+				<ee:transform doc:name="Transform Message3" doc:id="a747ebf1-9c45-42eb-843b-c6f69163a831" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="b92bdb47-159c-4e54-a047-1bf350cdf60b" />
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="31b88579-5d42-4226-b0ef-e9724920906d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="580ac739-2994-43d8-927f-40236b20d936" />
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger2" doc:id="8c176e09-226d-4d6b-86bd-633d7ccbf3d2" />
+	</flow>
+	<flow name="accountProccess" doc:id="573aa315-15ad-45ff-9a1f-f8e522f35ef6" >
+		<logger level="INFO" doc:name="Logger" doc:id="627be484-8228-4557-bd81-73f8fa50aa44" />
+		<ee:transform doc:name="Transform To List&lt;Account&gt;" doc:id="360c9eff-b2f3-4bd7-b19d-e32482d18fbb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var accounts = vars.accountList
+---
+accounts map (account) -> 
+{ 
+		"external_Id__c": account.external_Id__c,
+  		//"Id": account.Id,
+		  "Name": account.Name,
+		  "BillingAddress": account.BillingAddress,
+		  "BillingCity": account.BillingCity,
+		  "BillingCountry": account.BillingCountry,
+		  "BillingPostalCode": account.BillingPostalCode,
+		  "BillingState": account.BillingState,
+		  "BillingStreet": account.BillingStreet
+}
+
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message1" doc:id="46620eb4-7600-43e9-ba0c-045da7f3cf7c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload filter ((item) -> item.external_Id__c != null and item.external_Id__c != "")
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="accountObject" doc:id="e0ddfb55-5503-4066-9528-0010a50107f7" variableName="accountObject" />
+		<ee:transform doc:name="Transform Message" doc:id="bf63b924-9a2f-4f41-84c5-2d4f746ab7af">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output text/plain
+---
+(payload map (account) -> account.external_Id__c) joinBy "','"
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message4" doc:id="82a2a916-fc9b-49a9-93e8-2befcc22b0f0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output text/plain
+
+// Filtra los externalId válidos
+var validExternalIds = if (payload != null) payload else ""
+
+// Construye la consulta SQL
+var query = if (validExternalIds != null and validExternalIds != "") 
+    "SELECT Id, IsDeleted, MasterRecordId, Name, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, BillingGeocodeAccuracy, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, ShippingLatitude, ShippingLongitude, ShippingGeocodeAccuracy, Phone, Fax, AccountNumber, Website, PhotoUrl, Sic, Industry, AnnualRevenue, NumberOfEmployees, Ownership, TickerSymbol, Description, Rating, Site, OwnerId, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp, LastActivityDate, LastViewedDate, LastReferencedDate, Jigsaw, JigsawCompanyId, CleanStatus, AccountSource, DunsNumber, Tradestyle, NaicsCode, NaicsDesc, YearStarted, SicDesc, DandbCompanyId, CustomerPriority__c, SLA__c, Active__c, NumberofLocations__c, UpsellOpportunity__c, SLASerialNumber__c, SLAExpirationDate__c FROM Account " ++ 
+    "WHERE external_Id__c IN ('" ++ validExternalIds ++ "')" ++ 
+    " LIMIT 200"
+else 
+    ""
+
+---
+query
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="queryvalidateaccount" doc:id="db6105fe-af64-40de-91ba-73ec27844e5c" variableName="queryvalidateaccount" />
+		<http:request method="POST" doc:name="account-customerwebapihttpsystem POST/getvalidateexistenceaccount" doc:id="16019336-33dd-4353-b329-6af5bd833902" config-ref="HTTP_Request_configuration" path="/getvalidateexistenceaccount" />
+		<logger level="INFO" doc:name="Logger" doc:id="7548d091-5972-4558-acd7-41e06a14702e" />
+		<set-variable value="#[payload]" doc:name="validationAccount" doc:id="d537e7bf-e78c-4d86-9909-68ee64333bdb" variableName="validationAccount"/>
+		<ee:transform doc:name="Transform Message5" doc:id="b9bd4fb1-de73-4b56-90d8-80345aaba85d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+// Definir la lista de objetos
+var listObject = if (vars.validationAccount != null and vars.validationAccount != {}) vars.validationAccount else []
+
+// Función para verificar si un objeto no está en la lista de listObject
+fun notInList2(item) = 
+    if (isEmpty(listObject)) 
+        true 
+    else 
+        ! (listObject map ((p) -> p.external_Id__c) contains item.external_Id__c)
+
+---
+if (!isEmpty(listObject)) 
+    vars.accountObject filter notInList2
+else 
+    []
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger1" doc:id="d9ab2bf3-0254-4378-87eb-e3fe4fc49473" />
+		<choice doc:name="Proccess Product" doc:id="43f0745b-c990-4303-9742-55016a018e60" >
+			<when expression="#[isEmpty(payload)]" >
+				<ee:transform doc:name="Transform Message" doc:id="25bff4f8-c66e-488f-93b1-3b46911b8d3a" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.accountObject
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<ee:transform doc:name="Transform Message1" doc:id="c112f53c-4989-40e2-a1d1-9aaa59a30b1d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="1c79478f-2049-4f77-a1eb-4911d29233e4" />
+				<http:request method="POST" doc:name="account-customerwebapihttpsystem POST/accountcreated" doc:id="729317d0-2ebd-46f6-a465-621e8a7928dd" config-ref="HTTP_Request_configuration" path="/accountcreated" />
+				<ee:transform doc:name="Transform Message3" doc:id="cdb8e823-7ee9-4300-908a-0ab123afb3b2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="84e289e2-179d-4094-ad2d-6dc3631e999d" />
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="694c0889-e3b7-497d-b874-93770c8221d9" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+					</ee:variables>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="6720af49-9e0e-44f9-a97a-3407beb21f92" />
+			</otherwise>
+		</choice>
+		<set-variable value="#[payload]" doc:name="accountResponse" doc:id="636bcf72-cb0e-47df-8cb3-477230746d43" variableName="accountResponse"/>
+		<logger level="INFO" doc:name="Logger2" doc:id="99c22833-2b76-4e15-9f66-9e421b3cd9ee" />
 	</flow>
 </mule>

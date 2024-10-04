@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_eacd63cc_c064_4c59_8b91_9bc99d080330_Output_Variables_productResponse = Any
+

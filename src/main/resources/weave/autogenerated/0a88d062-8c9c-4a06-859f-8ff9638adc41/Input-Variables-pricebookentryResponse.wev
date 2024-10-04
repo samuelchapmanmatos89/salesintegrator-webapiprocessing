@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_0a88d062_8c9c_4a06_859f_8ff9638adc41_Input_Variables_pricebookentryResponse = Any
+
