@@ -1022,7 +1022,7 @@ var validExternalIds = if (payload != null) payload else ""
 
 // Construye la consulta SQL
 var query = if (validExternalIds != null and validExternalIds != "") 
-    "SELECT Id, IsDeleted, MasterRecordId, Name, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, BillingGeocodeAccuracy, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, ShippingLatitude, ShippingLongitude, ShippingGeocodeAccuracy, Phone, Fax, AccountNumber, Website, PhotoUrl, Sic, Industry, AnnualRevenue, NumberOfEmployees, Ownership, TickerSymbol, Description, Rating, Site, OwnerId, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp, LastActivityDate, LastViewedDate, LastReferencedDate, Jigsaw, JigsawCompanyId, CleanStatus, AccountSource, DunsNumber, Tradestyle, NaicsCode, NaicsDesc, YearStarted, SicDesc, DandbCompanyId, CustomerPriority__c, SLA__c, Active__c, NumberofLocations__c, UpsellOpportunity__c, SLASerialNumber__c, SLAExpirationDate__c FROM Account " ++ 
+    "SELECT external_Id__c, Id, IsDeleted, MasterRecordId, Name, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, BillingGeocodeAccuracy, ShippingStreet, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry, ShippingLatitude, ShippingLongitude, ShippingGeocodeAccuracy, Phone, Fax, AccountNumber, Website, PhotoUrl, Sic, Industry, AnnualRevenue, NumberOfEmployees, Ownership, TickerSymbol, Description, Rating, Site, OwnerId, CreatedDate, CreatedById, LastModifiedDate, LastModifiedById, SystemModstamp, LastActivityDate, LastViewedDate, LastReferencedDate, Jigsaw, JigsawCompanyId, CleanStatus, AccountSource, DunsNumber, Tradestyle, NaicsCode, NaicsDesc, YearStarted, SicDesc, DandbCompanyId, CustomerPriority__c, SLA__c, Active__c, NumberofLocations__c, UpsellOpportunity__c, SLASerialNumber__c, SLAExpirationDate__c FROM Account " ++ 
     "WHERE external_Id__c IN ('" ++ validExternalIds ++ "')" ++ 
     " LIMIT 200"
 else 
@@ -1042,33 +1042,28 @@ query
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 
-// Definir la lista de objetos
-var listObject = if (vars.validationAccount != null and vars.validationAccount != {}) vars.validationAccount else []
-
-// Función para verificar si un objeto no está en la lista de listObject
-fun notInList2(item) = 
-    if (isEmpty(listObject)) 
+// Función para verificar si un objeto no está en la lista de payload
+fun notInPayload(item) = 
+    if (isEmpty(payload)) 
         true 
     else 
-        ! (listObject map ((p) -> p.external_Id__c) contains item.external_Id__c)
+        // Aseguramos que comparamos external_Id__c con los valores de los objetos del payload
+        !(payload map ((p) -> p.external_Id__c) contains item.external_Id__c)
 
 ---
-if (!isEmpty(listObject)) 
-    vars.accountObject filter notInList2
-else 
-    []
+vars.accountObject filter (item) -> notInPayload(item)
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger1" doc:id="d9ab2bf3-0254-4378-87eb-e3fe4fc49473" />
 		<choice doc:name="Proccess Product" doc:id="43f0745b-c990-4303-9742-55016a018e60" >
-			<when expression="#[isEmpty(payload)]" >
+			<when expression="#[!isEmpty(payload)]" >
 				<ee:transform doc:name="Transform Message" doc:id="25bff4f8-c66e-488f-93b1-3b46911b8d3a" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-vars.accountObject
+payload
 ]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
@@ -1098,7 +1093,7 @@ payload]]></ee:set-payload>
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-payload]]></ee:set-payload>
+vars.validationAccount]]></ee:set-payload>
 					</ee:message>
 					<ee:variables >
 					</ee:variables>
