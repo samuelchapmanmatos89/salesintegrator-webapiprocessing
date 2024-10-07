@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_80173085_0711_455c_b114_4ab723f59248_Output_Variables_validationAccount = Any
+

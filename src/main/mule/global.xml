@@ -19,12 +19,15 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 		<http:request-connection host="${http.apiProduct}" connectionIdleTimeout="${http.timeout}" protocol="HTTPS"/>
 	</http:request-config>
 	<http:request-config name="HTTP_Request_configurationPricebook2" doc:name="HTTP Request configuration" doc:id="70b7235c-85c8-4632-8639-9d2800e3af2b" >
-		<http:request-connection host="${http.apiPricebook2}" connectionIdleTimeout="${http.timeout}" />
+		<http:request-connection host="${http.apiPricebook2}" connectionIdleTimeout="${http.timeout}" protocol="HTTPS"/>
 	</http:request-config>
 	<http:request-config name="HTTP_Request_configurationContract" doc:name="HTTP Request configuration" doc:id="f6ecb0b0-a55c-45d0-a17e-eef1e59e35bd" >
 		<http:request-connection protocol="HTTPS" host="${http.apiContract}" connectionIdleTimeout="${http.timeout}"/>
 	</http:request-config>
 	<http:request-config name="HTTP_Request_configurationPricebookentry" doc:name="HTTP Request configuration" doc:id="3df52af6-94c9-40a0-b278-bee351cbc4e6" >
 		<http:request-connection protocol="HTTPS" host="${http.apiPricebookentry}" connectionIdleTimeout="${http.timeout}" />
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configurationOrder" doc:name="HTTP Request configuration" doc:id="52834e3c-a269-4f8c-9412-570c4841a3ea" >
+		<http:request-connection host="${http.apiOrder}" connectionIdleTimeout="${http.timeout}" />
 	</http:request-config>
 </mule>
