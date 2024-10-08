@@ -18,9 +18,9 @@ http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/ba
 		<!-- [STUDIO:"accountProccess"]<flow-ref doc:name="accountProccess" doc:id="673c7c39-ad94-42c2-8781-1608ee82b315" name="AccountProcessValidatingExistingOrCreation"/> [STUDIO] -->
 		<!-- [STUDIO:"products2Proccess"]<flow-ref doc:name="products2Proccess" doc:id="066585ff-8ee0-4cbd-b432-4b4ccdf40ea3" name="products2ProcessValidatingExistingOrCreation" /> [STUDIO] -->
 		<!-- [STUDIO:"pricebook2Proccess"]<flow-ref doc:name="pricebook2Proccess" doc:id="27a5e4a8-1c81-471d-876c-cd799056bf2c" name="Pricebook2ProcessValidatingExistingOrCreation"/> [STUDIO] -->
-		<flow-ref doc:name="pricebookentryProccess" doc:id="35d31dae-81f2-4c9d-a6ac-7d3910746649" name="PricebookentryProcessValidatingExistingOrCreation"/>
+		<!-- [STUDIO:"pricebookentryProccess"]<flow-ref doc:name="pricebookentryProccess" doc:id="35d31dae-81f2-4c9d-a6ac-7d3910746649" name="PricebookentryProcessValidatingExistingOrCreation"/> [STUDIO] -->
 		<!-- [STUDIO:"contractProccess"]<flow-ref doc:name="contractProccess" doc:id="41b37f7e-9950-4440-8df1-141e478303e2" name="ContractProcessValidatingExistingOrCreation"/> [STUDIO] -->
-		<!-- [STUDIO:"orderProccess"]<flow-ref doc:name="orderProccess" doc:id="ee4d021b-4c9f-4a4b-8d53-aaf88b9961b8" name="OrderProcessValidatingExistingOrCreation"/> [STUDIO] -->
+		<flow-ref doc:name="orderProccess" doc:id="ee4d021b-4c9f-4a4b-8d53-aaf88b9961b8" name="OrderProcessValidatingExistingOrCreation"/>
 		<ee:transform doc:name="GeneralObjectResponse" doc:id="5c673142-9cf1-454a-81b7-75b0d1048f9a" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -29,7 +29,7 @@ output application/json
 {
 	"Responses": {
 		"accountRespose":vars.accountResponse,
-		"pricebookentryRespose":vars.pricebookentryResponse,
+		"pricebookentryRespose":vars.pricebookkentryResponse,
 		"contractRespose":vars.contractResponse,
 		"pricebook2Respose":vars.pricebook2Response,
 		"product2Response":vars.product2Response,
@@ -683,11 +683,11 @@ vars.validateContract]]></ee:set-payload>
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
-var pricebookentrys = payload.pricebookentry
+var pricebookentrys = vars.pricebookentryList
 ---
 pricebookentrys map (pricebookentry) -> 
 { 
-   "external_Id__c" : pricebookentry.externalId,
+   "external_Id__c" : pricebookentry.external_Id__c,
    "UseStandardPrice": pricebookentry.UseStandardPrice,
 		"type": pricebookentry.`type`,
         "IsDeleted": pricebookentry.IsDeleted,
@@ -700,7 +700,8 @@ pricebookentrys map (pricebookentry) ->
         "CreatedById": pricebookentry.CreatedById,
         "Pricebook2Id": pricebookentry.Pricebook2Id,
         "Id": pricebookentry.Id,
-        "LastModifiedById": pricebookentry.LastModifiedById
+        "LastModifiedById": pricebookentry.LastModifiedById        
+        
 }
 ]]></ee:set-payload>
 			</ee:message>
@@ -713,6 +714,12 @@ output application/json
 payload filter ((item) -> item.external_Id__c != null and item.external_Id__c != "")
 ]]></ee:set-payload>
 			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="pricebookentryObject" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
 		</ee:transform>
 		<ee:transform doc:name="Concatenate Ids." doc:id="fa5621eb-8194-416b-ab07-392c8647a23e" >
 			<ee:message >
@@ -733,7 +740,7 @@ var validExternalIds = if (payload != null) payload else ""
 
 // Construye la consulta SQL
 var query = if (validExternalIds != null and validExternalIds != "") 
-	"SELECT external_Id__c,UseStandardPrice,LastModifiedDate,IsDeleted,ProductCode,IsActive,Name,SystemModstamp,IsArchived,UnitPrice,Product2Id,CreatedById,CreatedDate,Pricebook2Id,Id,LastModifiedById FROM PricebookEntry " ++
+	"SELECT external_Id__c,UseStandardPrice,LastModifiedDate,IsDeleted,ProductCode,IsActive,Name,SystemModstamp,IsArchived,UnitPrice,Product2Id,CreatedById,CreatedDate,Pricebook2Id,Id,LastModifiedById FROM PricebookEntry "++
 	"WHERE external_Id__c IN ('" ++ validExternalIds ++ "')" ++ 
     " LIMIT 200"
 else 
@@ -765,7 +772,7 @@ fun notInPayload(item) =
         !(payload map ((p) -> p.external_Id__c) contains item.external_Id__c)
 
 ---
-vars.accountObject filter (item) -> notInPayload(item)
+vars.pricebookentryObject filter (item) -> notInPayload(item)
 ]]></ee:set-payload>
 			</ee:message>
 			<ee:variables >
@@ -803,7 +810,7 @@ payload]]></ee:set-payload>
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-vars.queryvalidatepricebookentry]]></ee:set-payload>
+vars.validatePricebookentry]]></ee:set-payload>
 					</ee:message>
 				</ee:transform>
 				<logger level="INFO" doc:name="Logger" doc:id="0d6bf607-afe7-4b1a-823c-0c46a7b362df" />
