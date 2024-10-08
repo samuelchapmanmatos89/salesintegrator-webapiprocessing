@@ -28,7 +28,7 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 		<http:request-connection protocol="HTTPS" host="${http.apiPricebookentry}" connectionIdleTimeout="${http.timeout}" />
 	</http:request-config>
 	<http:request-config name="HTTP_Request_configurationOrder" doc:name="HTTP Request configuration" doc:id="52834e3c-a269-4f8c-9412-570c4841a3ea" >
-		<http:request-connection host="${http.apiOrder}" connectionIdleTimeout="${http.timeout}" />
+		<http:request-connection host="${http.apiOrder}" connectionIdleTimeout="${http.timeout}" protocol="HTTPS"/>
 	</http:request-config>
 	<http:request-config name="HTTP_Request_configurationContract2" doc:name="HTTP Request configuration" doc:id="49c890b9-f5fa-4ed9-b1c9-eb900d188786" >
 		<http:request-connection protocol="HTTPS" host="${http.apiContract}" connectionIdleTimeout="${http.timeout}" />
