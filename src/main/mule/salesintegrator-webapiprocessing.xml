@@ -15,11 +15,11 @@ http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/ba
 	<flow name="salesintegrator-webapiexperienceFlow" doc:id="a9089982-b3e0-4090-8744-e06aabaf5461" initialState="started">
 		<http:listener doc:name="SalesIntegradorerviceProccessComplete" doc:id="500ebad3-5201-40f9-a23c-cd1dfab3a64c" config-ref="HTTP_Listener_config" path="/SalesIntegradorervice" allowedMethods="POST"/>
 		<flow-ref doc:name="selectObjectList" doc:id="0564a064-8a46-4d20-90d2-f63fec53db72" name="selectObjectList"/>
-		<!-- [STUDIO:"accountProccess"]<flow-ref doc:name="accountProccess" doc:id="673c7c39-ad94-42c2-8781-1608ee82b315" name="AccountProcessValidatingExistingOrCreation"/> [STUDIO] -->
-		<!-- [STUDIO:"products2Proccess"]<flow-ref doc:name="products2Proccess" doc:id="066585ff-8ee0-4cbd-b432-4b4ccdf40ea3" name="products2ProcessValidatingExistingOrCreation" /> [STUDIO] -->
-		<!-- [STUDIO:"pricebook2Proccess"]<flow-ref doc:name="pricebook2Proccess" doc:id="27a5e4a8-1c81-471d-876c-cd799056bf2c" name="Pricebook2ProcessValidatingExistingOrCreation"/> [STUDIO] -->
-		<!-- [STUDIO:"pricebookentryProccess"]<flow-ref doc:name="pricebookentryProccess" doc:id="35d31dae-81f2-4c9d-a6ac-7d3910746649" name="PricebookentryProcessValidatingExistingOrCreation"/> [STUDIO] -->
-		<!-- [STUDIO:"contractProccess"]<flow-ref doc:name="contractProccess" doc:id="41b37f7e-9950-4440-8df1-141e478303e2" name="ContractProcessValidatingExistingOrCreation"/> [STUDIO] -->
+		<flow-ref doc:name="accountProccess" doc:id="673c7c39-ad94-42c2-8781-1608ee82b315" name="AccountProcessValidatingExistingOrCreation"/>
+		<flow-ref doc:name="products2Proccess" doc:id="066585ff-8ee0-4cbd-b432-4b4ccdf40ea3" name="products2ProcessValidatingExistingOrCreation" />
+		<flow-ref doc:name="pricebook2Proccess" doc:id="27a5e4a8-1c81-471d-876c-cd799056bf2c" name="Pricebook2ProcessValidatingExistingOrCreation"/>
+		<flow-ref doc:name="pricebookentryProccess" doc:id="35d31dae-81f2-4c9d-a6ac-7d3910746649" name="PricebookentryProcessValidatingExistingOrCreation"/>
+		<flow-ref doc:name="contractProccess" doc:id="41b37f7e-9950-4440-8df1-141e478303e2" name="ContractProcessValidatingExistingOrCreation"/>
 		<flow-ref doc:name="orderProccess" doc:id="ee4d021b-4c9f-4a4b-8d53-aaf88b9961b8" name="OrderProcessValidatingExistingOrCreation"/>
 		<ee:transform doc:name="GeneralObjectResponse" doc:id="5c673142-9cf1-454a-81b7-75b0d1048f9a" >
 			<ee:message >
@@ -38,10 +38,11 @@ output application/json
 	"Request": {
 		"accountRequest":vars.accountList,
 		"pricebookentryRequest":vars.pricebookentryList,
-		"contractRequest":vars.contractProccessList,
+		"contractRequest":vars.contractList,
 		"pricebook2Request":vars.pricebook2List,
-		"product2Request":vars.productList,
-		"orderRequest":vars.orderList
+		"product2Request":vars.product2List,
+		"orderRequest": vars.orderList
+		
 	}
 }]]></ee:set-payload>
 			</ee:message>
@@ -683,7 +684,50 @@ vars.validateContract]]></ee:set-payload>
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
+import * from dw::Runtime
+
+var pricebookentryList = vars.pricebookentryList
 var pricebookentrys = vars.pricebookentryList
+// var product2Response = vars.product2Response
+// var pricebook2Response = vars.pricebook2Response
+
+// var hasPricebookEntries = pricebookentryList != null and pricebookentryList != []
+// var hasProductResponse = product2Response != null and product2Response != []
+// var hasPricebook2Response = pricebook2Response != null and pricebook2Response != []
+
+// var pricebookentryValidated = if (hasPricebookEntries) "" else fail('[{"response":"Flow empty"}]')
+
+// Obtener Product2Id
+// var pricebookentryIdProduct = if (hasPricebookEntries and pricebookentryList[0].Product2Id != null and pricebookentryList[0].Product2Id != "")
+  //                               pricebookentryList[0].Product2Id else ""
+
+// var productIdResponse = if (hasProductResponse and product2Response[0].id != null and product2Response[0].id != "")
+ //                         product2Response[0].id else ""
+
+// var productIdResponseNew = if (hasProductResponse and (productIdResponse == "" or productIdResponse == null) and
+//                               product2Response.items[0].id != null and product2Response.items[0].id != "")
+ //                              product2Response.items[0].id else ""
+
+// var productIdFinal = pricebookentryIdProduct 
+//                      default productIdResponse 
+ //                     default productIdResponseNew 
+ //                     default ""
+
+// Obtener Pricebook2Id
+// var pricebookentryIdPricebook = if (hasPricebookEntries and pricebookentryList[0].Pricebook2Id != null and pricebookentryList[0].Pricebook2Id != "")
+//                                  pricebookentryList[0].Pricebook2Id else ""
+
+// var pricebook2IdResponse = if (hasPricebook2Response and pricebook2Response[0].id != null and pricebook2Response[0].id != "")
+//                             pricebook2Response[0].id else ""
+
+// var pricebook2IdResponseNew = if (hasPricebook2Response and (pricebook2IdResponse == "" or pricebook2IdResponse == null) and
+ //                                 pricebook2Response.items[0].id != null and pricebook2Response.items[0].id != "")
+ //                                 pricebook2Response.items[0].id else ""
+
+// var pricebook2IdFinal = pricebookentryIdPricebook 
+ //                        default pricebook2IdResponse 
+  //                       default pricebook2IdResponseNew 
+   //                      default ""*/
 ---
 pricebookentrys map (pricebookentry) -> 
 { 
@@ -740,7 +784,7 @@ var validExternalIds = if (payload != null) payload else ""
 
 // Construye la consulta SQL
 var query = if (validExternalIds != null and validExternalIds != "") 
-	"SELECT Id,IsDeleted,Name,CreatedDate,CreatedById,LastModifiedDate,LastModifiedById,SystemModstamp,LastViewedDate,LastReferencedDate,IsActive,IsArchived,Description,IsStandard FROM Pricebook2 " ++
+	"SELECT external_Id__c,UseStandardPrice,LastModifiedDate,IsDeleted,ProductCode,IsActive,Name,SystemModstamp,IsArchived,UnitPrice,Product2Id,CreatedById,CreatedDate,Pricebook2Id,Id,LastModifiedById FROM PricebookEntry " ++
 	"WHERE external_Id__c IN ('" ++ validExternalIds ++ "')" ++ 
     " LIMIT 200"
 else 
