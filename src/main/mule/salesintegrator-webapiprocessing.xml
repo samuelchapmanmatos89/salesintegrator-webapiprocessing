@@ -688,46 +688,46 @@ import * from dw::Runtime
 
 var pricebookentryList = vars.pricebookentryList
 var pricebookentrys = vars.pricebookentryList
-// var product2Response = vars.product2Response
-// var pricebook2Response = vars.pricebook2Response
+var product2Response = vars.product2Response
+var pricebook2Response = vars.pricebook2Response
 
-// var hasPricebookEntries = pricebookentryList != null and pricebookentryList != []
-// var hasProductResponse = product2Response != null and product2Response != []
-// var hasPricebook2Response = pricebook2Response != null and pricebook2Response != []
+var hasPricebookEntries = pricebookentryList != null and pricebookentryList != []
+var hasProductResponse = product2Response != null and product2Response != []
+var hasPricebook2Response = pricebook2Response != null and pricebook2Response != []
 
-// var pricebookentryValidated = if (hasPricebookEntries) "" else fail('[{"response":"Flow empty"}]')
+var pricebookentryValidated = if (hasPricebookEntries) "" else fail('[{"response":"Flow empty"}]')
 
-// Obtener Product2Id
-// var pricebookentryIdProduct = if (hasPricebookEntries and pricebookentryList[0].Product2Id != null and pricebookentryList[0].Product2Id != "")
-  //                               pricebookentryList[0].Product2Id else ""
+//Obtener Product2Id
+var pricebookentryIdProduct = if (hasPricebookEntries and pricebookentryList[0].Product2Id != null and pricebookentryList[0].Product2Id != "")
+                               pricebookentryList[0].Product2Id else ""
+                               
+ var productIdResponse = if (hasProductResponse and product2Response[0].id != null and product2Response[0].id != "")
+                         product2Response[0].id else ""
 
-// var productIdResponse = if (hasProductResponse and product2Response[0].id != null and product2Response[0].id != "")
- //                         product2Response[0].id else ""
+var productIdResponseNew = if (hasProductResponse and (productIdResponse == "" or productIdResponse == null) and
+                              product2Response.items[0].id != null and product2Response.items[0].id != "")
+                              product2Response.items[0].id else ""
 
-// var productIdResponseNew = if (hasProductResponse and (productIdResponse == "" or productIdResponse == null) and
-//                               product2Response.items[0].id != null and product2Response.items[0].id != "")
- //                              product2Response.items[0].id else ""
-
-// var productIdFinal = pricebookentryIdProduct 
-//                      default productIdResponse 
- //                     default productIdResponseNew 
- //                     default ""
+ var productIdFinal = pricebookentryIdProduct 
+                      default productIdResponse 
+                      default productIdResponseNew 
+                      default ""
 
 // Obtener Pricebook2Id
-// var pricebookentryIdPricebook = if (hasPricebookEntries and pricebookentryList[0].Pricebook2Id != null and pricebookentryList[0].Pricebook2Id != "")
-//                                  pricebookentryList[0].Pricebook2Id else ""
+ var pricebookentryIdPricebook = if (hasPricebookEntries and pricebookentryList[0].Pricebook2Id != null and pricebookentryList[0].Pricebook2Id != "")
+                                  pricebookentryList[0].Pricebook2Id else ""
 
-// var pricebook2IdResponse = if (hasPricebook2Response and pricebook2Response[0].id != null and pricebook2Response[0].id != "")
-//                             pricebook2Response[0].id else ""
+ var pricebook2IdResponse = if (hasPricebook2Response and pricebook2Response[0].id != null and pricebook2Response[0].id != "")
+                             pricebook2Response[0].id else ""
 
-// var pricebook2IdResponseNew = if (hasPricebook2Response and (pricebook2IdResponse == "" or pricebook2IdResponse == null) and
- //                                 pricebook2Response.items[0].id != null and pricebook2Response.items[0].id != "")
- //                                 pricebook2Response.items[0].id else ""
+ var pricebook2IdResponseNew = if (hasPricebook2Response and (pricebook2IdResponse == "" or pricebook2IdResponse == null) and
+                                  pricebook2Response.items[0].id != null and pricebook2Response.items[0].id != "")
+                                  pricebook2Response.items[0].id else ""
 
-// var pricebook2IdFinal = pricebookentryIdPricebook 
- //                        default pricebook2IdResponse 
-  //                       default pricebook2IdResponseNew 
-   //                      default ""*/
+ var pricebook2IdFinal = pricebookentryIdPricebook 
+                         default pricebook2IdResponse 
+                         default pricebook2IdResponseNew 
+                         default ""
 ---
 pricebookentrys map (pricebookentry) -> 
 { 
